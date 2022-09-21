@@ -28,6 +28,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/f9383735bc.js" crossorigin="anonymous"></script>
 
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
+
     <style>
         * {
             font-family: 'Jua', sans-serif;
@@ -47,9 +49,9 @@
 
 
 
-
     </style>
     <script>
+
         $(document).ready(function () {
             bsCustomFileInput.init()
             listing()
@@ -69,6 +71,7 @@
                         let file = diaries[i]['file']
                         let time = diaries[i]['time']
                         let update = diaries[i]['update']
+                        let username = diaries[i]['username2']
 
                         let temp_html = ``
                         if(update == 1)
@@ -77,9 +80,11 @@
                                             <img src="../static/${file}" class="card-img-top">
                                             <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
-                                                <p class="card-text">${location}</p>
+                                                <p class="card-location">${location}</p>
                                                 <p class="card-text">${content}</p>
                                                 <p class="save-date">${time}</p>
+                                                <p class="save-name">ID: ${username}</p>
+
                                             </div>
                                         </div>`
                         }
@@ -117,14 +122,18 @@
             let title = $('#title').val()
             let location = $('#location').val()
             let content = $("#content").val()
+            let username = $("#username").val()
 
             let file = $('#file')[0].files[0]
             let form_data = new FormData()
+
+
 
             form_data.append("file_give", file)
             form_data.append("title_give", title)
             form_data.append("location_give", location)
             form_data.append("content_give", content)
+            form_data.append("username_give", username)
 
             $.ajax({
                 type: "POST",
@@ -139,21 +148,41 @@
                 }
             });
         }
+
+
+
     </script>
 </head>
 
 <body>
 <div class="wrap">
-
-    <div class="jumbotron jumbotron-fluid">
-        <div>
-            <button style="float: right" type="button" class="btn btn-info" onclick="window.location.href='/user/{{ user_info.username }}'">Mypage</button>
+    <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <strong class="is-sparta"
+                        style="font-family: 'Stylish', sans-serif;">맛집 방범대</strong>
+            </a>
         </div>
+    </nav>
 
-
-    <div class="card-columns" id="cards-box">
+    <div class="room">
+        <ul class="right">
+            <button style="float: right" type="button" class="btn btn-info" onclick="window.location.href='/user/{{ user_info.username }}'">Mypage</button>
+            <a class="btn btn-danger" data-bs-toggle="collapse" href="#collapseExample" role="button"
+               aria-expanded="false" aria-controls="collapseExample"
+               onclick="window.location.replace('/login')">Logout</a>
+        </ul>
     </div>
-</div>
+
+    <div class="card-room">
+        <div class="card-columns" id="cards-box"></div>
+
+    </div>
+
+
 </body>
+
+
+
 
 </html>

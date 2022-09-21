@@ -107,6 +107,7 @@ def save_diary():
     title_receive = request.form['title_give']
     content_receive = request.form['content_give']
     location_receive = request.form['location_give']
+    username2_receive = request.form['username2_give']
 
     file = request.files["file_give"]
 
@@ -130,7 +131,8 @@ def save_diary():
         'file': f'{filename}.{extension}',
         'time': today.strftime('%Y.%m.%d'),
         'num':count,
-        'update':0
+        'update':0,
+        'username2' : username2_receive
     }
 
     db.diary.insert_one(doc)
@@ -142,6 +144,14 @@ def bucket_done():
     num_receive = request.form['num_give']
     db.diary.update_one({'num': int(num_receive)}, {'$set': {'update': 1}})
     return jsonify({'msg': '공유 완료!'})
+
+
+
+@app.route("/user/<keyword>")
+def get_id(keyword):
+    #URL에서 ID 찾아오기
+    return render_template("user.html", getusername = keyword)
+
 
 
 

@@ -27,6 +27,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/f9383735bc.js" crossorigin="anonymous"></script>
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
 
     <style>
         * {
@@ -66,8 +67,12 @@
             background-color: transparent;
         }
 
+
     </style>
     <script>
+        let getusername = '{{ user_info.username }}'
+        console.log({getusername})
+
         $(document).ready(function () {
             bsCustomFileInput.init()
             listing()
@@ -88,38 +93,41 @@
                         let time = diaries[i]['time']
                         let update = diaries[i]['update']
                         let num = diaries[i]['num']
+                        let username2 = diaries[i]['username2']
+
 
                         let temp_html = ``
-                        if(update == 0)
-                        {
-                            temp_html = `<div class="card">
-                                            <img src="../static/${file}" class="card-img-top">
-                                            <div class="card-body">
-                                                <h5 class="card-title">${title}</h5>
-                                                <p class="card-text">${location}</p>
-                                                <p class="card-text">${content}</p>
-                                                <p class="save-date">${time}</p>
-                                                <button onclick="done_list(${num})" id="share" type="button" style="float: right; font-size: 15px; color: darkgray; margin-bottom: 15px; background-color: transparent; border: none">
-                                                    <i class="fa-regular fa-share-from-square"></i>
-                                                </button>
-                                            </div>
-                                        </div>`
-                        }
+                        if(getusername === username2) {
+                            if (update == 0) {
+                                temp_html = `<div class="card">
+                                                <img src="../static/${file}" class="card-img-top">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${title}</h5>
+                                                    <p class="card-location">${location}</p>
+                                                    <p class="card-text">${content}</p>
+                                                    <p class="save-date">${time}</p>
+                                                    <p class="save-name">ID: ${username2}</p>
+                                                    <button onclick="done_list(${num})" id="share" type="button" style="float: right; font-size: 15px; color: darkgray; margin-bottom: 15px; background-color: transparent; border: none">
+                                                        <i class="fa-regular fa-share-from-square"></i>
+                                                    </button>
+                                                </div>
+                                            </div>`
 
-                        else
-                        {
-                            temp_html = `<div class="card">
+                            } else {
+                                temp_html = `<div class="card">
                                             <img src="../static/${file}" class="card-img-top">
                                             <div class="card-body">
                                                 <h5 class="card-title">${title}</h5>
-                                                <p class="card-text">${location}</p>
+                                                <p class="card-location">${location}</p>
                                                 <p class="card-text">${content}</p>
                                                 <p class="save-date">${time}</p>
+                                                <p class="save-name">ID: ${username2}</p>
                                                 <button onclick="share_done()" id="share" type="button" style="float: right; font-size: 15px; color: darkgray; margin-bottom: 15px; background-color: transparent; border: none">
                                                     <i class="fa-regular fa-share-from-square"></i>
                                                 </button>
                                             </div>
                                         </div>`
+                            }
                         }
 
 
@@ -150,6 +158,8 @@
             let title = $('#title').val()
             let location = $('#location').val()
             let content = $("#content").val()
+            let username2 = getusername
+
 
             let file = $('#file')[0].files[0]
             let form_data = new FormData()
@@ -158,6 +168,8 @@
             form_data.append("title_give", title)
             form_data.append("location_give", location)
             form_data.append("content_give", content)
+            form_data.append("username2_give", username2)
+
 
             $.ajax({
                 type: "POST",
@@ -177,14 +189,22 @@
 
 <body>
 <div class="wrap">
-
-    <div class="jumbotron jumbotron-fluid">
+    <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <strong class="is-sparta"
+                        style="font-family: 'Stylish', sans-serif;">맛집 방범대</strong>
+            </a>
+        </div>
+    </nav>
+    <div class="room">
         <div>
-            <button type="button" style="float: right; font-size: 20px; color: red" class="logout" onclick="window.location.href='/login'">
+            <button type="button" style="float: right; font-size: 20px; color: red" class="logout"
+                    onclick="window.location.href='/login'">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
             </button>
 
-            <button style="float: right; font-size: 20px" class = "home" onclick="window.location.href='/'">
+            <button style="float: right; font-size: 20px" class="home" onclick="window.location.href='/'">
                 <i class="fa-solid fa-house"></i>
             </button>
         </div>
