@@ -2,6 +2,7 @@ from pymongo import MongoClient
 import jwt
 import datetime
 import hashlib
+import os
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
@@ -132,7 +133,8 @@ def save_diary():
         'time': today.strftime('%Y.%m.%d'),
         'num':count,
         'update':0,
-        'username2' : username2_receive
+        'username2' : username2_receive,
+        'done': 0
     }
 
     db.diary.insert_one(doc)
@@ -151,6 +153,13 @@ def bucket_done():
 def get_id(keyword):
     #URL에서 ID 찾아오기
     return render_template("user.html", getusername = keyword)
+@app.route("/comment/del", methods=["POST"])
+def comment_del():
+    num_receive = request.form['num_give']
+
+    db.diary.update_one({'num': int(num_receive)}, {'$set': {'done': 1}})
+    db.diary.delete_one({'done': 1})
+    return jsonify({'msg': '삭제 완료'})
 
 
 

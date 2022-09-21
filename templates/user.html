@@ -55,15 +55,14 @@
         .home {
             color: cornflowerblue;
             margin-bottom: 0;
-            border:none;
+            border: none;
             background-color: transparent;
         }
 
-        .logout
-        {
+        .logout {
             margin-top: 0.1px;
             margin-left: 2px;
-            border:none;
+            border: none;
             background-color: transparent;
         }
 
@@ -97,7 +96,7 @@
 
 
                         let temp_html = ``
-                        if(getusername === username2) {
+                        if (getusername === username2) {
                             if (update == 0) {
                                 temp_html = `<div class="card">
                                                 <img src="../static/${file}" class="card-img-top">
@@ -109,6 +108,9 @@
                                                     <p class="save-name">ID: ${username2}</p>
                                                     <button onclick="done_list(${num})" id="share" type="button" style="float: right; font-size: 15px; color: darkgray; margin-bottom: 15px; background-color: transparent; border: none">
                                                         <i class="fa-regular fa-share-from-square"></i>
+                                                    </button>
+                                                    <button onclick="trash(${num})" type="button"class="icon has-text-danger" style="float: right; border: none;background-color: transparent;">
+                                                         <i class="fas fa-ban"></i>
                                                     </button>
                                                 </div>
                                             </div>`
@@ -125,6 +127,9 @@
                                                 <button onclick="share_done()" id="share" type="button" style="float: right; font-size: 15px; color: darkgray; margin-bottom: 15px; background-color: transparent; border: none">
                                                     <i class="fa-regular fa-share-from-square"></i>
                                                 </button>
+                                                <button onclick="trash(${num})" type="button" class="icon has-text-danger" style="float: right; border: none;background-color: transparent;">
+                                                  <i class="fas fa-ban"></i>
+                                                </button>
                                             </div>
                                         </div>`
                             }
@@ -137,8 +142,19 @@
             })
         }
 
-        function share_done()
-        {
+        function trash(num) {
+            $.ajax({
+                type: "POST",
+                url: "/comment/del",
+                data: {num_give: num},
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+
+        function share_done() {
             alert("이미 공유된 게시물 입니다!")
         }
 
